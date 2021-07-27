@@ -6,7 +6,6 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { CATEGORIES } from '../data/dummy-data.js';
 
 const CategoriesScreen = (props) => {
@@ -44,7 +43,7 @@ CategoriesScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   screen: {
-    paddingVertical: 20,
+    paddingVertical: 0,
   },
   list: {},
   gridItem: {
