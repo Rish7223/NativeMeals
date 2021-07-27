@@ -1,21 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import * as Font from 'expo-font';
+import MealsNavigator from './navigation/MealsNavigator';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+  const [loaded] = Font.useFonts({
+    'open-sans': require('./assets/Fonts/OpenSans-Regular.ttf'),
+    'open-sans-semi-bold': require('./assets/Fonts/OpenSans-SemiBold.ttf'),
+    'open-sans-bold': require('./assets/Fonts/OpenSans-Bold.ttf'),
+  });
+
+  if (!loaded) {
+    return (
+      <View>
+        <Text>Loading assets...</Text>
+      </View>
+    );
+  }
+
+  return <MealsNavigator />;
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  text: {
+    fontFamily: 'open-sans',
+    fontSize: 25,
   },
 });
