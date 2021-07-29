@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  Image,
-  ScrollView,
-  SafeAreaView,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import CustomHeaderButton from '../components/HeaderButton';
 import Colors from '../constants/Colors';
 import { RECIPES } from '../data/dummy-data';
-import Recipes from '../models/recipes';
 import { getMealData } from '../utilityFunctions/getMealUsingCategory';
 
 const MealDetailScreen = ({ navigation }) => {
@@ -78,19 +71,30 @@ MealDetailScreen.navigationOptions = ({ navigation }) => {
   const mealId = navigation.getParam('mealId');
 
   return {
-    headerTitle: getMealData(mealId, RECIPES).title,
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          iconName="ios-star"
+          title="Fav"
+          onPress={() => {
+            console.log('header button pressed');
+          }}
+        />
+      </HeaderButtons>
+    ),
   };
 };
 
 const styles = StyleSheet.create({
-  screen: { paddingTop: 10 },
+  screen: {},
   heading: {
     fontFamily: 'open-sans-bold',
     textAlign: 'center',
     paddingHorizontal: 20,
+    backgroundColor: Colors.white,
+    paddingVertical: 10,
   },
   imageSec: {
-    marginTop: 10,
     maxHeight: 250,
     height: '100%',
     width: '100%',

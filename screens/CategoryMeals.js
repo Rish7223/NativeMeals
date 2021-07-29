@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
   Pressable,
+  TouchableOpacity,
 } from 'react-native';
 import Colors from '../constants/Colors';
 import { CATEGORIES, RECIPES } from '../data/dummy-data';
@@ -27,7 +28,7 @@ const CategoriesMeals = ({ navigation }) => {
   const mealView = (mealData) => {
     const { id, title, img, duration } = mealData.item;
     return (
-      <Pressable
+      <TouchableOpacity
         style={styles.mealCard}
         onPress={() => {
           navigation.navigate({
@@ -54,7 +55,7 @@ const CategoriesMeals = ({ navigation }) => {
           </Text>
           <Text style={styles.duration}>Duration: {duration}m</Text>
         </View>
-      </Pressable>
+      </TouchableOpacity>
     );
   };
 
@@ -62,7 +63,11 @@ const CategoriesMeals = ({ navigation }) => {
     meals.length && (
       <View style={styles.screen}>
         <Text style={styles.text}>Meals List</Text>
-        <FlatList data={meals} renderItem={mealView} />
+        <FlatList
+          data={meals}
+          renderItem={mealView}
+          style={{ width: '100%', paddingHorizontal: 20 }}
+        />
       </View>
     )
   ) : (
@@ -83,12 +88,14 @@ CategoriesMeals.navigationOptions = ({ navigation }) => {
 const styles = StyleSheet.create({
   screen: {
     marginTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
+    paddingBottom: 40,
   },
   text: {
     fontFamily: 'open-sans-bold',
     fontSize: 20,
     marginBottom: 20,
+    paddingHorizontal: 20,
   },
 
   mealCard: {
