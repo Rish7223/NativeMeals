@@ -9,7 +9,7 @@ import {
   Pressable,
   TouchableOpacity,
 } from 'react-native';
-import Colors from '../constants/Colors';
+import MealList from '../components/MealList';
 import { CATEGORIES, RECIPES } from '../data/dummy-data';
 import { getMealsUsingCategory } from '../utilityFunctions/getMealUsingCategory';
 
@@ -24,48 +24,19 @@ const CategoriesMeals = ({ navigation }) => {
     }
   }, [CatId]);
 
-  // renderItem
-  const mealView = (mealData) => {
-    const { id, title, img, duration } = mealData.item;
-    return (
-      <TouchableOpacity
-        style={styles.mealCard}
-        onPress={() => {
-          navigation.navigate({
-            routeName: 'MealDetail',
-            params: {
-              mealId: id,
-            },
-          });
-        }}
-      >
-        <View style={styles.imageSec}>
-          <Image
-            source={{
-              uri: img,
-            }}
-            style={styles.image}
-          />
-        </View>
-        <View style={styles.infoSec}>
-          <Text
-            style={{ fontSize: title.length > 25 ? 15 : 16, ...styles.heading }}
-          >
-            {title}
-          </Text>
-          <Text style={styles.duration}>Duration: {duration}m</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   return loading == false ? (
     meals.length && (
       <View style={styles.screen}>
         <Text style={styles.text}>Meals List</Text>
         <FlatList
           data={meals}
-          renderItem={mealView}
+          renderItem={(mealData) => (
+            <MealList
+              mealData={mealData}
+              navigation={navigation}
+              list={RECIPES}
+            />
+          )}
           style={{ width: '100%', paddingHorizontal: 20 }}
         />
       </View>
@@ -96,46 +67,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 20,
     paddingHorizontal: 20,
-  },
-
-  mealCard: {
-    flexDirection: 'row',
-    minHeight: 100,
-    maxHeight: 100,
-    elevation: 1,
-    backgroundColor: Colors.white,
-    marginBottom: 20,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-
-  imageSec: {
-    maxWidth: 130,
-    width: '100%',
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-
-  infoSec: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-  },
-
-  heading: {
-    fontFamily: 'open-sans-bold',
-  },
-
-  duration: {
-    fontSize: 14,
-    fontFamily: 'open-sans',
-    color: Colors.gray,
   },
 });
 

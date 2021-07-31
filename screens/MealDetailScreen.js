@@ -3,16 +3,24 @@ import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../components/HeaderButton';
 import Colors from '../constants/Colors';
-import { RECIPES } from '../data/dummy-data';
-import { getMealData } from '../utilityFunctions/getMealUsingCategory';
+import { FAVORITES, RECIPES } from '../data/dummy-data';
+
+import {
+  getMealData,
+  isPresentInFavList,
+  addElementToFavList,
+  removeElementFromFavList,
+} from '../utilityFunctions/getMealUsingCategory';
 
 const MealDetailScreen = ({ navigation }) => {
   const [mealData, setMealData] = useState(null);
   const [loading, setLoading] = useState(false);
   const mealId = navigation.getParam('mealId');
+  const mealList = navigation.getParam('list');
+
   useEffect(() => {
     if (mealId) {
-      const data = getMealData(mealId, RECIPES, setLoading);
+      const data = getMealData(mealId, mealList, setLoading);
       setMealData(data);
     }
   }, [mealId]);
@@ -69,15 +77,21 @@ const MealDetailScreen = ({ navigation }) => {
 
 MealDetailScreen.navigationOptions = ({ navigation }) => {
   const mealId = navigation.getParam('mealId');
+  const data = getMealData(mealId, RECIPES);
+  const isPresentInFav = isPresentInFavList(mealId, FAVORITES);
 
   return {
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
-          iconName="ios-star"
+          iconName={isPresentInFav ? 'ios-star' : 'ios-star-outline'}
           title="Fav"
           onPress={() => {
-            console.log('header button pressed');
+            if (isPresentInFav) {
+              removeElementFromFavList(mealId, FAVORITES);
+            } else {
+              addElementToFavList(data, FAVORITES);
+            }
           }}
         />
       </HeaderButtons>

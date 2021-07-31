@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { CATEGORIES } from '../data/dummy-data.js';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import CustomHeaderButton from '../components/HeaderButton.js';
+import { DrawerActions } from 'react-navigation-drawer';
 
 const CategoriesScreen = (props) => {
   const { navigation } = props;
@@ -37,9 +40,20 @@ const CategoriesScreen = (props) => {
   );
 };
 
-CategoriesScreen.navigationOptions = {
+CategoriesScreen.navigationOptions = ({ navigation }) => ({
   headerTitle: 'Meal Categories',
-};
+  headerRight: () => (
+    <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+      <Item
+        iconName="ios-menu"
+        title="menu"
+        onPress={() => {
+          navigation.dispatch(DrawerActions.toggleDrawer());
+        }}
+      />
+    </HeaderButtons>
+  ),
+});
 
 const styles = StyleSheet.create({
   screen: {

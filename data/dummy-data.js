@@ -315,3 +315,5 @@ export const RECIPES = [
     true
   ),
 ];
+
+export const FAVORITES = [];
