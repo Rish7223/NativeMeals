@@ -36,7 +36,7 @@ const FavoriteScreen = ({ navigation }) => {
 };
 
 FavoriteScreen.navigationOptions = ({ navigation }) => ({
-  headerRight: () => (
+  headerLeft: () => (
     <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
       <Item
         iconName="ios-menu"

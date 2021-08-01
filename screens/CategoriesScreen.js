@@ -42,7 +42,7 @@ const CategoriesScreen = (props) => {
 
 CategoriesScreen.navigationOptions = ({ navigation }) => ({
   headerTitle: 'Meal Categories',
-  headerRight: () => (
+  headerLeft: () => (
     <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
       <Item
         iconName="ios-menu"
