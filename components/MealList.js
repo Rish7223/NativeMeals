@@ -2,9 +2,12 @@ import React from 'react';
 import { TouchableOpacity, View, Text, Image } from 'react-native';
 import { StyleSheet } from 'react-native';
 import Colors from '../constants/Colors';
+import { isPresentInFavList } from '../utilityFunctions/getMealUsingCategory';
 
-const MealList = ({ mealData, navigation, list }) => {
+const MealList = ({ mealData, navigation, favList }) => {
   const { id, title, img, duration } = mealData.item;
+  const isPresentInFav = isPresentInFavList(id, favList);
+
   return (
     <TouchableOpacity
       style={styles.mealCard}
@@ -13,7 +16,8 @@ const MealList = ({ mealData, navigation, list }) => {
           routeName: 'MealDetail',
           params: {
             mealId: id,
-            list: list,
+            title: title,
+            isFavorite: isPresentInFav,
           },
         });
       }}

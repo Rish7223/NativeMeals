@@ -1,29 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../components/HeaderButton';
 import Colors from '../constants/Colors';
 import { FAVORITES, RECIPES } from '../data/dummy-data';
+import { useSelector, useDispatch } from 'react-redux';
 
-import {
-  getMealData,
-  isPresentInFavList,
-  addElementToFavList,
-  removeElementFromFavList,
-} from '../utilityFunctions/getMealUsingCategory';
+import { getMealData } from '../utilityFunctions/getMealUsingCategory';
+import { toggleFavorite } from '../store/actions/meals';
 
 const MealDetailScreen = ({ navigation }) => {
+  const availableMeals = useSelector((state) => state.meals.meals);
   const [mealData, setMealData] = useState(null);
   const [loading, setLoading] = useState(false);
   const mealId = navigation.getParam('mealId');
-  const mealList = navigation.getParam('list');
 
   useEffect(() => {
     if (mealId) {
-      const data = getMealData(mealId, mealList, setLoading);
+      const data = getMealData(mealId, availableMeals, setLoading);
       setMealData(data);
     }
+  }, [mealId, dispatch]);
+
+  const dispatch = useDispatch();
+
+  const toggleFavoriteHandler = useCallback(() => {
+    dispatch(toggleFavorite(mealId));
   }, [mealId]);
+
+  useEffect(() => {
+    navigation.setParams({ toggleFav: toggleFavoriteHandler });
+  }, [toggleFavoriteHandler]);
 
   return loading != true ? (
     mealData && (
@@ -76,23 +83,15 @@ const MealDetailScreen = ({ navigation }) => {
 };
 
 MealDetailScreen.navigationOptions = ({ navigation }) => {
-  const mealId = navigation.getParam('mealId');
-  const data = getMealData(mealId, RECIPES);
-  const isPresentInFav = isPresentInFavList(mealId, FAVORITES);
-
+  const isPresentInFav = navigation.getParam('isFavorite');
+  const toggleFavHandler = navigation.getParam('toggleFav');
   return {
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
           iconName={isPresentInFav ? 'ios-star' : 'ios-star-outline'}
           title="Fav"
-          onPress={() => {
-            if (isPresentInFav) {
-              removeElementFromFavList(mealId, FAVORITES);
-            } else {
-              addElementToFavList(data, FAVORITES);
-            }
-          }}
+          onPress={toggleFavHandler}
         />
       </HeaderButtons>
     ),

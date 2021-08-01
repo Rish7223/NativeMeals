@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  FlatList,
-  Image,
-  Pressable,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import MealList from '../components/MealList';
-import { CATEGORIES, RECIPES } from '../data/dummy-data';
+import { CATEGORIES } from '../data/dummy-data';
 import { getMealsUsingCategory } from '../utilityFunctions/getMealUsingCategory';
+import { useSelector } from 'react-redux';
 
 const CategoriesMeals = ({ navigation }) => {
   const [loading, setLoading] = useState(null);
   const [meals, setMeals] = useState([]);
   const CatId = navigation.getParam('categoryId');
+  const availableMeals = useSelector((state) => state.meals.filteredMeals);
+  const favMeals = useSelector((state) => state.meals.favoriteMeals);
   useEffect(() => {
     if (CatId) {
-      let list = getMealsUsingCategory(CatId, RECIPES, setLoading);
+      let list = getMealsUsingCategory(CatId, availableMeals, setLoading);
       setMeals(list);
     }
   }, [CatId]);
@@ -34,7 +28,7 @@ const CategoriesMeals = ({ navigation }) => {
             <MealList
               mealData={mealData}
               navigation={navigation}
-              list={RECIPES}
+              favList={favMeals}
             />
           )}
           style={{ width: '100%', paddingHorizontal: 20 }}

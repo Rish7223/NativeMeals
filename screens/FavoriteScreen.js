@@ -7,22 +7,24 @@ import { FAVORITES } from '../data/dummy-data';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../components/HeaderButton';
 import { DrawerActions } from 'react-navigation-drawer';
+import { useSelector } from 'react-redux';
 const FavoriteScreen = ({ navigation }) => {
+  const favMeals = useSelector((state) => state.meals.favoriteMeals);
   return (
     <View style={styles.screen}>
       <View style={styles.head}>
         <Text style={styles.heading}>You Favorite Meals</Text>
         <Ionicons name="refresh" size={25} color={Colors.primaryColor} />
       </View>
-      {FAVORITES.length > 0 ? (
+      {favMeals.length > 0 ? (
         <FlatList
           style={styles.list}
-          data={FAVORITES}
+          data={favMeals}
           renderItem={(mealData) => (
             <MealList
               mealData={mealData}
-              list={FAVORITES}
               navigation={navigation}
+              favList={favMeals}
             />
           )}
         />
