@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Alert } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../components/HeaderButton';
 import Colors from '../constants/Colors';
-import { FAVORITES, RECIPES } from '../data/dummy-data';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getMealData } from '../utilityFunctions/getMealUsingCategory';
@@ -14,13 +13,16 @@ const MealDetailScreen = ({ navigation }) => {
   const [mealData, setMealData] = useState(null);
   const [loading, setLoading] = useState(false);
   const mealId = navigation.getParam('mealId');
+  const [isFavorite, setIsFavorite] = useState(
+    navigation.getParam('isFavorite')
+  );
 
   useEffect(() => {
     if (mealId) {
       const data = getMealData(mealId, availableMeals, setLoading);
       setMealData(data);
     }
-  }, [mealId, dispatch]);
+  }, [mealId, dispatch, isFavorite]);
 
   const dispatch = useDispatch();
 
@@ -31,6 +33,33 @@ const MealDetailScreen = ({ navigation }) => {
   useEffect(() => {
     navigation.setParams({ toggleFav: toggleFavoriteHandler });
   }, [toggleFavoriteHandler]);
+
+  // alert
+  const createTwoButtonAlert = () =>
+    Alert.alert(
+      'Alert!!',
+      isFavorite
+        ? `This meal is removed from Favorite Meals list`
+        : `This meal is added to Favorite Meals list`,
+      [
+        {
+          text: ' go to favorites',
+          onPress: () => navigation.navigate('Favorites'),
+        },
+        {
+          text: 'OK',
+        },
+      ],
+      { cancelable: false }
+    );
+
+  useEffect(() => {
+    navigation.setParams({
+      setFav: setIsFavorite,
+      isFav: isFavorite,
+      alert: createTwoButtonAlert,
+    });
+  }, [setIsFavorite, isFavorite]);
 
   return loading != true ? (
     mealData && (
@@ -83,15 +112,21 @@ const MealDetailScreen = ({ navigation }) => {
 };
 
 MealDetailScreen.navigationOptions = ({ navigation }) => {
-  const isPresentInFav = navigation.getParam('isFavorite');
+  const isPresentInFav = navigation.getParam('isFav');
   const toggleFavHandler = navigation.getParam('toggleFav');
+  const setFavorite = navigation.getParam('setFav');
+  const alert = navigation.getParam('alert');
   return {
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
           iconName={isPresentInFav ? 'ios-star' : 'ios-star-outline'}
           title="Fav"
-          onPress={toggleFavHandler}
+          onPress={() => {
+            toggleFavHandler();
+            setFavorite(!isPresentInFav);
+            alert();
+          }}
         />
       </HeaderButtons>
     ),

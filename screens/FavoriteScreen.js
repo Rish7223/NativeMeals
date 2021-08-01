@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import Colors from '../constants/Colors';
 import MealList from '../components/MealList';
-import { Ionicons } from '@expo/vector-icons';
-import { FAVORITES } from '../data/dummy-data';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../components/HeaderButton';
 import { DrawerActions } from 'react-navigation-drawer';
@@ -14,7 +12,6 @@ const FavoriteScreen = ({ navigation }) => {
     <View style={styles.screen}>
       <View style={styles.head}>
         <Text style={styles.heading}>You Favorite Meals</Text>
-        <Ionicons name="refresh" size={25} color={Colors.primaryColor} />
       </View>
       {favMeals.length > 0 ? (
         <FlatList
